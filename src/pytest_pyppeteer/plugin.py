@@ -5,6 +5,7 @@ import sys
 from functools import reduce
 from inspect import getmembers, getmodule, isfunction
 from logging import getLogger
+from shutil import which
 from types import MethodType
 from typing import TYPE_CHECKING
 
@@ -31,6 +32,7 @@ _chrome_executable_path = {
     "macos": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "win64": "C:/Program Files/Google/Chrome/Application/chrome.exe",
     "win32": "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe",
+    "linux": which("chromium"),
 }
 
 logger = getLogger("pytest_pyppeteer")
@@ -76,6 +78,8 @@ def platform() -> Optional[str]:
         return "macos"
     elif sys.platform.startswith("win"):
         return "win64" if sys.maxsize > 2 ** 32 else "win32"
+    elif sys.platform.startswith("linux"):
+        return "linux"
     else:
         logger.error(
             "Platform {!r} is unsupported. Currently only support {!r}.".format(
