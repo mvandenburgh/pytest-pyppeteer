@@ -1,6 +1,7 @@
 name: Test
 
 on:
+    push:
     pull_request:
         types: [opened, synchronize, reopened]
         branches:
@@ -33,6 +34,10 @@ jobs:
                   python -m pip install poetry
                   poetry install
 
+            - name: Setup Chrome
+              uses: browser-actions/setup-chrome@v0.0.0
+              if: startsWith(matrix.os, 'ubuntu')
+
             - name: Execute tests
               run: |
-                  poetry run pytest tests -sv
+                  poetry run pytest tests -v
