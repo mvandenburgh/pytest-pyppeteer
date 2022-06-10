@@ -157,4 +157,6 @@ async def browser_factory(options: dict) -> Callable[..., Browser]:
 @pytest.fixture
 async def browser(browser_factory: Callable[..., Browser]) -> Browser:
     """Provide a new browser instance."""
-    yield await browser_factory()
+    browser: Browser = await browser_factory()
+    yield browser
+    await browser.close()
